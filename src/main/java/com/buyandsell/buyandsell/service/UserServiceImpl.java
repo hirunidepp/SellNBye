@@ -1,5 +1,7 @@
 package com.buyandsell.buyandsell.service;
 
+import com.buyandsell.buyandsell.Exception.InvalidAttributesException;
+import com.buyandsell.buyandsell.Exception.ResourceNotFoundException;
 import com.buyandsell.buyandsell.Repository.UserRepository;
 import com.buyandsell.buyandsell.common.Session;
 import com.buyandsell.buyandsell.common.Validator;
@@ -17,7 +19,7 @@ public class UserServiceImpl implements UserService {
         if (Validator.isValidUser(user)) {
             return userRepository.save(user);
         } else {
-            return null;
+            throw new InvalidAttributesException("Invalid User Attributes");
         }
     }
 
@@ -27,11 +29,15 @@ public class UserServiceImpl implements UserService {
         if ((Session.getCurrentUser().equals(user) && Validator.isValidUser(user)))
             return userRepository.save(user);
         else
-            return null;
+            throw new InvalidAttributesException("Invalid User Attributes");
     }
 
     @Override
     public void deleteUser(Long userID) {
+
+        if (!userRepository.findById(userID).isPresent()) {
+            throw new ResourceNotFoundException("User ID doesn't exists");
+        }
 
         if (Session.getCurrentUser().getId().equals(userID)) {
             userRepository.delete(Session.getCurrentUser());
@@ -40,6 +46,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(String email) {
+
+        if (userRepository.findByEmail(email) == null) {
+            throw new ResourceNotFoundException("User email doesn't exists");
+        }
 
         return userRepository.findByEmail(email);
     }

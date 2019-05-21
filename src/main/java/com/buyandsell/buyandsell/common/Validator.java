@@ -9,10 +9,7 @@ public class Validator {
         if (user != null)
             if ((user.getName() != null) && !user.getName().isEmpty())
                 if ((user.getEmail() != null) && (!user.getEmail().isEmpty()))
-                    if ((user.getUname() != null) && !user.getUname().isEmpty())
-                        return true;
-                    else
-                        return false;
+                    return (user.getUname() != null) && !user.getUname().isEmpty();
                 else
                     return false;
             else
