@@ -1,10 +1,10 @@
-package com.buyandsell.buyandsell.controller;
+package com.sellNBye.controller;
 
-import com.buyandsell.buyandsell.Exception.InvalidAttributesException;
-import com.buyandsell.buyandsell.Exception.ResourceNotFoundException;
-import com.buyandsell.buyandsell.Exception.UserServiceExceptionHandler;
-import com.buyandsell.buyandsell.model.User;
-import com.buyandsell.buyandsell.service.UserService;
+import com.sellNBye.Exception.InvalidAttributesException;
+import com.sellNBye.Exception.ResourceNotFoundException;
+import com.sellNBye.Exception.UserServiceExceptionHandler;
+import com.sellNBye.model.User;
+import com.sellNBye.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,7 @@ public class UserController {
     UserService userService;
 
     @RequestMapping(value = "/addUser", method = RequestMethod.POST)
-    public User addUser(@RequestParam(value = "User_Object", required = true) @Validated @RequestBody final User user) {
+    public User addUser(@Validated @RequestBody User user) {
 
         if (user == null)
             throw new ResourceNotFoundException("Invalid User Object");
@@ -25,8 +25,8 @@ public class UserController {
         return userService.addUser(user);
     }
 
-    @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
-    public User updateUser(@RequestParam(value = "User_Object") @Validated @RequestBody final User user) {
+    @RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
+    public User updateUser(@Validated @RequestBody final User user) {
 
         if (user == null)
             throw new ResourceNotFoundException("Invalid User Object");
@@ -37,7 +37,7 @@ public class UserController {
     @RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE)
     public void deleteUser(@RequestParam(value = "User_ID", required = true) final Long userId) {
 
-        if (userId > 0)
+        if (userId < 0)
             throw new InvalidAttributesException("Invalid User ID");
 
         userService.deleteUser(userId);

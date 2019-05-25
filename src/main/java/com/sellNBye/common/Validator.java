@@ -1,6 +1,6 @@
-package com.buyandsell.buyandsell.common;
+package com.sellNBye.common;
 
-import com.buyandsell.buyandsell.model.User;
+import com.sellNBye.model.User;
 
 public class Validator {
 

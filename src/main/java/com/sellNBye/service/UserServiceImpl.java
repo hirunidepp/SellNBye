@@ -1,13 +1,18 @@
-package com.buyandsell.buyandsell.service;
+package com.sellNBye.service;
 
-import com.buyandsell.buyandsell.Exception.InvalidAttributesException;
-import com.buyandsell.buyandsell.Exception.ResourceNotFoundException;
-import com.buyandsell.buyandsell.Repository.UserRepository;
-import com.buyandsell.buyandsell.common.Session;
-import com.buyandsell.buyandsell.common.Validator;
-import com.buyandsell.buyandsell.model.User;
+import com.sellNBye.Exception.InvalidAttributesException;
+import com.sellNBye.Exception.ResourceNotFoundException;
+import com.sellNBye.Repository.UserRepository;
+import com.sellNBye.common.Session;
+import com.sellNBye.common.Validator;
+import com.sellNBye.model.User;
+
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -26,7 +31,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(User user) {
 
-        if ((Session.getCurrentUser().equals(user) && Validator.isValidUser(user)))
+        if (Validator.isValidUser(user))
             return userRepository.save(user);
         else
             throw new InvalidAttributesException("Invalid User Attributes");
@@ -34,14 +39,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long userID) {
-
-        if (!userRepository.findById(userID).isPresent()) {
+    	Optional<User> userToDelete = userRepository.findById(userID);
+        if (!userToDelete.isPresent()) {
             throw new ResourceNotFoundException("User ID doesn't exists");
         }
 
-        if (Session.getCurrentUser().getId().equals(userID)) {
-            userRepository.delete(Session.getCurrentUser());
-        }
+        userRepository.delete(userToDelete.get());
     }
 
     @Override
